@@ -12,7 +12,8 @@ Body Section
 
                 <c:forEach var="item" items="${categories}">
                     <li>
-                        <a href='<c:url value="/san-pham/${item.id}" /> '> <span class="icon-circle-blank"></span> ${item.name}</a>
+                        <a href='<c:url value="/san-pham/${item.id}" /> '> <span
+                                class="icon-circle-blank"></span> ${item.name}</a>
                     </li>
                 </c:forEach>
 
