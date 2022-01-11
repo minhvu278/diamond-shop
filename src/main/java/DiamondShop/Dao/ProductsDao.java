@@ -4,6 +4,7 @@ import DiamondShop.Dto.ProductDtoMapper;
 import DiamondShop.Dto.ProductsDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -59,16 +60,15 @@ public class ProductsDao extends BaseDao{
         return sql.toString();
     }
 
-    private String SqlProductsById(int id) {
+    private StringBuffer SqlProductsById(int id) {
         StringBuffer sql = SqlString();
-        sql.append("WHERE 1 = 1 ");
-        sql.append("AND cat_id = "  + id);
-        return sql.toString();
+        sql.append("WHERE cat_id = "  + id + " ");
+        return sql;
     }
 
-    private String SqlProductsPaginates(int start, int end) {
-        StringBuffer sql = SqlString();
-        sql.append("LIMIT  "  + start + ", " + end);
+    private String SqlProductsPaginates(int id, int start, int totalPage) {
+        StringBuffer sql = SqlProductsById(id);
+        sql.append("LIMIT  "  + start + ", " + totalPage);
         return sql.toString();
     }
 
@@ -84,9 +84,33 @@ public class ProductsDao extends BaseDao{
         return listProducts;
     }
 
-    public List<ProductsDto> GetDataProductsByPaginates(int start, int end) {
-        String sql = SqlProductsPaginates(start, end);
-        List<ProductsDto> listProducts = _jdbcTemplate.query(sql, new ProductDtoMapper());
+    public List<ProductsDto> GetDataProductsPaginate(int id, int start, int totalPage) {
+        StringBuffer sqlGetDataById = SqlProductsById(id);
+        List<ProductsDto> listProductsById = _jdbcTemplate.query(sqlGetDataById.toString(), new ProductDtoMapper());
+        List<ProductsDto> listProducts = new ArrayList<>();
+        if (listProductsById.size() > 0) {
+            String sql = SqlProductsPaginates(id, start, totalPage);
+            listProducts = _jdbcTemplate.query(sql, new ProductDtoMapper());
+        }
         return listProducts;
+    }
+
+    private String SqlProductById(long id) {
+        StringBuffer sql = SqlString();
+        sql.append("WHERE p.id = "  + id + " ");
+        sql.append("LIMIT 1 ");
+        return sql.toString();
+    }
+
+    public List<ProductsDto> GetProductById(long id) {
+        String sql = SqlProductById(id);
+        List<ProductsDto> listProduct = _jdbcTemplate.query(sql, new ProductDtoMapper());
+        return listProduct;
+    }
+
+    public ProductsDto FindGetProductById(long id) {
+        String sql = SqlProductById(id);
+        ProductsDto product = _jdbcTemplate.queryForObject(sql, new ProductDtoMapper());
+        return product;
     }
 }

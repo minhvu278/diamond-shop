@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-<h1>${AllProductsById.size()}</h1>
+<h1>${productByIdCategory.size()}</h1>
 <div class="well well-small">
     <div class="row">
         <span style="margin-left: 25px;">Danh sách sản phẩm</span>
@@ -46,8 +46,8 @@
             <c:forEach var="item" items="${ productsPaginate }" varStatus="loop">
             <li class="span4">
                 <div class="thumbnail">
-                    <a href="product_details.html" class="overlay"></a>
-                    <a class="zoomTool" href="product_details.html" title="add to cart"><span
+                    <a href="<c:url value="/chi-tiet-san-pham/${ item.id_product }"/>" class="overlay"></a>
+                    <a class="zoomTool" href="<c:url value="/chi-tiet-san-pham/${ item.id_product }"/>" title="add to cart"><span
                             class="icon-search"></span> QUICK VIEW</a>
                     <a href="product_details.html"><img src="<c:url value="/assets/user/img/${ item.img }"/>"
                                                         alt=""></a>
@@ -81,12 +81,12 @@
 
     </div>
     <div class="pagination">
-        <c:forEach var="item" begin="${paginateInfo.start}" end="${paginateInfo.end}" varStatus="loop">
+        <c:forEach var="item" begin="1" end="${paginateInfo.totalPage}" varStatus="loop">
             <c:if test="${ (loop.index)  ==  paginateInfo.currentPage}">
-                <a href="#" class="active">${loop.index}</a>
+                <a href="<c:url value="/san-pham/${idCategory}/${loop.index}"/>" class="active">${loop.index}</a>
             </c:if>
             <c:if test="${ (loop.index)  !=  paginateInfo.currentPage}">
-                <a href="#">${loop.index}</a>
+                <a href="<c:url value="/san-pham/${idCategory}/${loop.index}"/>">${loop.index}</a>
             </c:if>
         </c:forEach>
     </div>
